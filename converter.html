@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Conversor SIENGE → dados.json</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  body{font-family:'Barlow',sans-serif; background:#F3F2ED; color:#232B3D; display:flex;
+    align-items:center; justify-content:center; min-height:100vh; margin:0;}
+  .card{background:#fff; border-radius:12px; padding:34px 38px; max-width:440px; box-shadow:0 4px 20px rgba(20,20,40,.1);}
+  h1{font-size:19px; color:#283556; margin:0 0 6px;}
+  p{font-size:13.5px; color:#6B7280; margin:0 0 20px; line-height:1.5;}
+  .drop{border:2px dashed #D0D0D0; border-radius:8px; padding:26px 18px; text-align:center; cursor:pointer;}
+  .drop:hover{border-color:#004AAD; background:#eef4fc;}
+  input[type=file]{display:none;}
+  #status{margin-top:16px; font-size:13.5px;}
+  #status.ok{color:#1E7005;}
+  #status.err{color:#B00020;}
+  a.dl{display:inline-block; margin-top:10px; background:#1E7005; color:#fff; text-decoration:none;
+    padding:10px 18px; border-radius:7px; font-weight:600;}
+  ol{font-size:12.5px; color:#6B7280; padding-left:18px; margin-top:22px;}
+  ol li{margin-bottom:4px;}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Conversor SIENGE → dados.json</h1>
+  <p>Arraste aqui o relatório de solicitações de compra exportado do SIENGE (.xlsx). Este conversor roda só no seu navegador — nada é enviado para nenhum servidor.</p>
+  <div class="drop" id="dropZone">
+    <b>Clique ou arraste o arquivo .xlsx</b>
+    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+  </div>
+  <div id="status"></div>
+  <ol>
+    <li>Baixe o <b>dados.json</b> gerado abaixo.</li>
+    <li>No GitHub, abra o repositório do painel.</li>
+    <li>Clique em <b>dados.json</b> → ícone de lápis (editar) ou "Upload files" → arraste o novo arquivo por cima.</li>
+    <li>Clique em "Commit changes". O painel publicado atualiza sozinho no próximo acesso.</li>
+  </ol>
+</div>
+<script>
+function excelDateToJS(v){
+  if(v instanceof Date) return v;
+  if(typeof v === 'number'){ const d = new Date(Math.round((v-25569)*86400*1000)); return isNaN(d)?null:d; }
+  if(typeof v === 'string'){ const m=v.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/); if(m) return new Date(+m[3],+m[2]-1,+m[1]); }
+  return null;
+}
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+dropZone.addEventListener('click', ()=>fileInput.click());
+dropZone.addEventListener('dragover', e=>e.preventDefault());
+dropZone.addEventListener('drop', e=>{ e.preventDefault(); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', e=>{ if(e.target.files[0]) handleFile(e.target.files[0]); });
+
+function handleFile(file){
+  const statusEl = document.getElementById('status');
+  statusEl.className=''; statusEl.textContent = 'Lendo "'+file.name+'"…';
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    try{
+      const wb = XLSX.read(e.target.result, {type:'array', cellDates:true});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(ws, {defval:null, raw:true});
+      const data = json.filter(r => r['Situação']);
+      const rows = data.map(r=>{
+        const dSol = excelDateToJS(r['Data solicitação']);
+        const dPrev = excelDateToJS(r['Data previsão']);
+        const dAtend = excelDateToJS(r['Data atendimento']);
+        return {
+          sc: r['Nº da solicitação'],
+          item: r['Descrição insumo'] || '(sem descrição)',
+          situacao: (r['Situação']||'').trim(),
+          solicitante: r['Solicitante'] || '—',
+          dataSol: dSol ? dSol.toISOString() : null,
+          dataPrev: dPrev ? dPrev.toISOString() : null,
+          dataAtend: dAtend ? dAtend.toISOString() : null,
+          atraso: (typeof r['Diferença de dias']==='number') ? r['Diferença de dias'] : null,
+          pendente: r['Quant. pendente'],
+          unidade: r['Descrição unidade medida'] || '',
+          atendida: r['Quant. atendida'],
+          obs: r['Observação da solicitação'] || ''
+        };
+      });
+      const payload = {fileName:file.name, savedAt:new Date().toISOString(), rows};
+      const blob = new Blob([JSON.stringify(payload)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      statusEl.className='ok';
+      statusEl.innerHTML = rows.length+' itens convertidos. <br><a class="dl" href="'+url+'" download="dados.json">Baixar dados.json</a>';
+    }catch(err){
+      statusEl.className='err';
+      statusEl.textContent = 'Erro ao ler o arquivo: '+err.message;
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+</script>
+</body>
+</html>

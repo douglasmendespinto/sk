@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#283556">
+<meta name="robots" content="noindex, nofollow">
+<title>Pedido de compra | SK Infraestrutura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<script>
+/* ====== CONFIGURAÇÃO ======================================================
+   https://script.google.com/macros/s/AKfycbx5UDfwzPGq_AyDC9dLuFRlJP_culGMZaLJi_kfnjYtAyKRvDS-lyz5ABtYqIpbP2sj/exec
+   (termina em /exec). É a única coisa a alterar neste arquivo.          */
+const SCRIPT_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
+/* ========================================================================= */
+</script>
+<style>
+:root{
+  --navy:#283556; --navy-2:#1B2540; --verde:#1E7005; --verde-2:#175904;
+  --azul:#004AAD; --amarelo:#FFDE59; --fundo:#EEF1F5; --papel:#FFFFFF;
+  --tinta:#1B2433; --suave:#5B6676; --linha:#CBD2DC; --erro:#B42318; --ambar:#B7791F;
+  --raio:10px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--fundo);color:var(--tinta);
+  font-family:Barlow,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:17px;line-height:1.45}
+[hidden]{display:none!important}
+
+.topo{background:var(--navy);color:#fff;padding:calc(18px + env(safe-area-inset-top,0px)) 20px 18px}
+.topo-in,.conteudo,.barra-in{max-width:560px;margin:0 auto}
+.topo-in{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.topo h1{margin:0;font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:700;
+  font-size:34px;line-height:1;letter-spacing:.01em}
+.topo p{margin:6px 0 0;font-size:15px;color:#C9D1E2}
+.faixa div{height:5px}
+.faixa div:nth-child(1){background:var(--verde)}
+.faixa div:nth-child(2){background:var(--azul)}
+.faixa div:nth-child(3){background:var(--amarelo)}
+.sair{background:none;border:1px solid #5A688C;color:#fff;font:inherit;font-size:14px;
+  padding:6px 12px;border-radius:6px;cursor:pointer;white-space:nowrap}
+
+.conteudo{padding:22px 16px 130px}
+.bloco{background:var(--papel);border-radius:var(--raio);padding:18px 16px;margin-bottom:14px;
+  border:1px solid #DDE2EA}
+.bloco h2{margin:0 0 14px;font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:600;
+  font-size:23px;line-height:1.1;color:var(--navy)}
+.campo{margin-bottom:14px}
+.campo:last-child{margin-bottom:0}
+label,.rotulo{display:block;font-weight:600;font-size:15px;margin-bottom:5px}
+.opcional{font-weight:400;color:var(--suave)}
+input[type=text],input[type=tel],input[type=password],input[type=date],input[type=number],select,textarea{
+  width:100%;font:inherit;font-size:17px;color:var(--tinta);background:#fff;
+  border:1.5px solid var(--linha);border-radius:8px;padding:12px;min-height:50px;appearance:none;-webkit-appearance:none}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--suave) 50%),linear-gradient(135deg,var(--suave) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 22px,calc(100% - 12px) 22px;background-size:6px 6px;background-repeat:no-repeat;padding-right:30px}
+textarea{min-height:84px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible,.urg input:focus-visible+span{
+  outline:3px solid rgba(0,74,173,.35);outline-offset:1px;border-color:var(--azul)}
+.invalido{border-color:var(--erro)!important}
+
+/* Urgência */
+.urg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.urg label{margin:0;font-weight:500}
+.urg input{position:absolute;opacity:0;pointer-events:none}
+.urg span{display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:64px;
+  border:1.5px solid var(--linha);border-radius:8px;padding:8px 6px;text-align:center;
+  font-weight:700;font-size:16px;cursor:pointer;background:#fff}
+.urg small{font-weight:400;font-size:12.5px;line-height:1.2;color:var(--suave)}
+.urg input:checked+span{color:#fff;border-color:transparent}
+.urg input:checked+span small{color:rgba(255,255,255,.9)}
+.urg .u1 input:checked+span{background:var(--verde)}
+.urg .u2 input:checked+span{background:var(--ambar)}
+.urg .u3 input:checked+span{background:var(--erro)}
+
+/* Itens */
+.item{border:1.5px solid var(--linha);border-radius:8px;padding:12px;margin-bottom:10px;background:#FAFBFC}
+.item-topo{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.item-n{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:700;font-size:19px;color:var(--navy)}
+.remover{background:none;border:0;color:var(--erro);font:inherit;font-size:15px;font-weight:600;
+  padding:8px 4px;cursor:pointer}
+.dupla{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-linha{width:100%;min-height:52px;background:#fff;color:var(--azul);border:1.5px dashed var(--azul);
+  border-radius:8px;font:inherit;font-weight:700;cursor:pointer}
+
+/* Anexos */
+.anexos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.anexo{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;border:1px solid var(--linha);
+  background:#F1F3F6;display:flex;align-items:center;justify-content:center;font-size:13px;
+  text-align:center;padding:6px;word-break:break-word;color:var(--suave)}
+.anexo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.anexo button{position:absolute;top:4px;right:4px;width:30px;height:30px;border-radius:50%;border:0;
+  background:rgba(27,36,51,.85);color:#fff;font-size:18px;line-height:1;cursor:pointer}
+.dica{font-size:14px;color:var(--suave);margin:6px 0 0}
+
+/* Barra de envio */
+.barra{position:fixed;left:0;right:0;bottom:0;background:var(--papel);border-top:1px solid #D5DBE4;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 18px rgba(40,53,86,.10)}
+.barra-in{display:flex;align-items:center;gap:14px}
+.resumo{flex:1;font-size:15px;color:var(--suave);line-height:1.25}
+.resumo b{color:var(--tinta)}
+.btn{min-height:54px;padding:0 24px;border:0;border-radius:8px;background:var(--verde);color:#fff;
+  font:inherit;font-weight:700;font-size:18px;cursor:pointer}
+.btn:active{background:var(--verde-2)}
+.btn[disabled]{opacity:.6;cursor:default}
+.btn.largo{width:100%}
+
+.aviso{border-radius:8px;padding:12px 14px;font-size:15.5px;margin-bottom:14px;
+  background:#FDECEA;color:#7A1810;border:1px solid #F3B8B1}
+.aviso.neutro{background:#FFF7D6;color:#5C4700;border-color:#EBD77A}
+
+/* Entrada e confirmação */
+.centro{max-width:420px;margin:0 auto;padding:28px 16px}
+.ok-num{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:700;font-size:64px;line-height:1;
+  color:var(--verde);margin:6px 0 10px}
+@media (prefers-reduced-motion:no-preference){
+  .ok-num{animation:surgir .35s ease-out}
+  @keyframes surgir{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-in">
+    <div>
+      <h1>Pedido de compra</h1>
+      <p>SK Infraestrutura, Projeto Sucuriú (ARAUCO)</p>
+    </div>
+    <button class="sair" id="btnSair" type="button" hidden>Sair</button>
+  </div>
+</header>
+<div class="faixa" aria-hidden="true"><div></div><div></div><div></div></div>
+
+<!-- Tela 1: senha -->
+<main class="centro" id="telaEntrada" hidden>
+  <div class="bloco">
+    <h2>Digite a senha da obra</h2>
+    <div class="aviso" id="erroEntrada" role="alert" hidden></div>
+    <div class="campo">
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" autocomplete="current-password" enterkeyhint="go">
+    </div>
+    <button class="btn largo" id="btnEntrar" type="button">Entrar</button>
+    <p class="dica">Não tem a senha? Peça ao setor administrativo da obra.</p>
+  </div>
+</main>
+
+<!-- Tela 2: formulário -->
+<main class="conteudo" id="telaForm" hidden>
+  <div class="aviso" id="erroForm" role="alert" hidden></div>
+
+  <section class="bloco">
+    <h2>Quem está pedindo</h2>
+    <div class="campo">
+      <label for="solicitante">Seu nome</label>
+      <input type="text" id="solicitante" maxlength="80" autocomplete="name">
+    </div>
+    <div class="campo">
+      <label for="setor">Setor ou frente de serviço</label>
+      <input type="text" id="setor" maxlength="80" placeholder="Ex.: Mecânica, Solda, Almoxarifado">
+    </div>
+    <div class="campo">
+      <label for="contato">Telefone para contato <span class="opcional">(opcional)</span></label>
+      <input type="tel" id="contato" maxlength="60" autocomplete="tel" inputmode="tel">
+    </div>
+  </section>
+
+  <section class="bloco">
+    <h2>Urgência</h2>
+    <div class="urg" role="radiogroup" aria-label="Urgência">
+      <label class="u1"><input type="radio" name="urgencia" value="Normal" checked><span>Normal<small>Segue o fluxo</small></span></label>
+      <label class="u2"><input type="radio" name="urgencia" value="Urgente"><span>Urgente<small>Precisa nesta semana</small></span></label>
+      <label class="u3"><input type="radio" name="urgencia" value="Emergencial"><span>Emergencial<small>Serviço parado</small></span></label>
+    </div>
+    <div class="campo" style="margin-top:14px">
+      <label for="prazo">Necessário até <span class="opcional">(opcional)</span></label>
+      <input type="date" id="prazo">
+    </div>
+  </section>
+
+  <section class="bloco">
+    <h2>Itens do pedido</h2>
+    <div id="listaItens"></div>
+    <button class="btn-linha" id="btnAddItem" type="button">+ Adicionar outro item</button>
+  </section>
+
+  <section class="bloco">
+    <h2>Fotos e anexos</h2>
+    <div class="anexos" id="listaAnexos"></div>
+    <button class="btn-linha" id="btnAnexo" type="button">+ Adicionar foto ou PDF</button>
+    <input type="file" id="arquivo" accept="image/*,application/pdf" multiple hidden>
+    <p class="dica">Até 6 arquivos. Foto da peça, da etiqueta ou do local ajuda a comprar certo.</p>
+  </section>
+
+  <section class="bloco">
+    <h2>Justificativa</h2>
+    <div class="campo">
+      <label for="justificativa">Para que serve este pedido? <span class="opcional">(opcional)</span></label>
+      <textarea id="justificativa" maxlength="1000" placeholder="Ex.: reposição de estoque, manutenção da bomba 2"></textarea>
+    </div>
+  </section>
+</main>
+
+<div class="barra" id="barra" hidden>
+  <div class="barra-in">
+    <div class="resumo" id="resumo"></div>
+    <button class="btn" id="btnEnviar" type="button">Enviar pedido</button>
+  </div>
+</div>
+
+<!-- Tela 3: confirmação -->
+<main class="centro" id="telaOk" hidden>
+  <div class="bloco">
+    <h2>Pedido enviado</h2>
+    <div class="ok-num" id="okNum"></div>
+    <p style="margin:0 0 16px">Guarde este número. O setor administrativo já recebeu o pedido por e-mail.</p>
+    <button class="btn largo" id="btnNovo" type="button">Fazer outro pedido</button>
+  </div>
+</main>
+
+<script>
+(function(){
+  'use strict';
+  const UNIDADES = ['un','pç','cx','m','m²','m³','kg','t','L','gl','rolo','par','jogo','sc','outro'];
+  const MAX_ANEXOS = 6, MAX_PDF = 4 * 1024 * 1024, MAX_ITENS = 40;
+  const $ = id => document.getElementById(id);
+  const configurado = /^https:\/\/script\.google\.com\//.test(SCRIPT_URL);
+
+  let senha = '';
+  let itens = [];
+  let anexos = [];
+  let enviando = false;
+
+  // ---------- armazenamento local (só conveniência) ----------
+  const guarda = {
+    ler(k){ try{ return localStorage.getItem(k) || ''; }catch(e){ return ''; } },
+    gravar(k,v){ try{ localStorage.setItem(k,v); }catch(e){} },
+    apagar(k){ try{ localStorage.removeItem(k); }catch(e){} }
+  };
+
+  // ---------- comunicação ----------
+  async function chamar(dados){
+    // Sem cabeçalho Content-Type: vai como texto simples e evita bloqueio do navegador.
+    const r = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify(dados), redirect:'follow' });
+    return JSON.parse(await r.text());
+  }
+
+  // ---------- telas ----------
+  function mostrar(tela){
+    ['telaEntrada','telaForm','telaOk'].forEach(t => $(t).hidden = (t !== tela));
+    $('barra').hidden = tela !== 'telaForm';
+    $('btnSair').hidden = tela === 'telaEntrada';
+    window.scrollTo(0,0);
+  }
+  function aviso(id, msg, neutro){
+    const el = $(id);
+    el.textContent = msg || '';
+    el.hidden = !msg;
+    el.classList.toggle('neutro', !!neutro);
+    if (msg) el.scrollIntoView({block:'center', behavior:'smooth'});
+  }
+
+  // ---------- entrada ----------
+  async function entrar(valor, silencioso){
+    if (!configurado){
+      aviso('erroEntrada','Formulário ainda não configurado: falta colar a URL do Apps Script no arquivo index.html.', true);
+      return;
+    }
+    if (!valor){ aviso('erroEntrada','Digite a senha.'); return; }
+    const b = $('btnEntrar'); b.disabled = true; b.textContent = 'Conferindo…';
+    try{
+      const r = await chamar({acao:'entrar', senha: valor});
+      if (r.ok){
+        senha = valor; guarda.gravar('ch_senha', valor);
+        aviso('erroEntrada','');
+        abrirFormulario();
+      } else {
+        guarda.apagar('ch_senha');
+        aviso('erroEntrada', silencioso ? 'A senha mudou. Digite a nova senha.' : 'Senha incorreta. Confira e tente de novo.');
+      }
+    }catch(e){
+      aviso('erroEntrada','Sem conexão com o servidor. Confira a internet e tente de novo.');
+    }finally{
+      b.disabled = false; b.textContent = 'Entrar';
+    }
+  }
+
+  function abrirFormulario(){
+    $('solicitante').value = guarda.ler('ch_nome');
+    $('setor').value = guarda.ler('ch_setor');
+    $('contato').value = guarda.ler('ch_contato');
+    document.querySelector('input[name=urgencia][value=Normal]').checked = true;
+    $('prazo').value = ''; $('justificativa').value = '';
+    itens = [novoItem()]; anexos = [];
+    desenharItens(); desenharAnexos(); aviso('erroForm','');
+    mostrar('telaForm');
+  }
+
+  // ---------- itens ----------
+  function novoItem(){ return {descricao:'', qtd:'', un:'un', obs:''}; }
+
+  function el(tag, attrs, filhos){
+    const e = document.createElement(tag);
+    for (const k in (attrs||{})){
+      if (k === 'text') e.textContent = attrs[k];
+      else if (k.startsWith('on')) e.addEventListener(k.slice(2), attrs[k]);
+      else e.setAttribute(k, attrs[k]);
+    }
+    (filhos||[]).forEach(f => e.appendChild(f));
+    return e;
+  }
+
+  function desenharItens(){
+    const lista = $('listaItens');
+    lista.textContent = '';
+    itens.forEach((it, i) => {
+      const id = 'it' + i;
+      const desc = el('input', {type:'text', id:id+'d', maxlength:'300', placeholder:'Ex.: Disco de corte 7" para aço', value: it.descricao,
+        oninput: e => { it.descricao = e.target.value; e.target.classList.remove('invalido'); }});
+      const qtd = el('input', {type:'text', id:id+'q', inputmode:'decimal', maxlength:'10', value: it.qtd,
+        oninput: e => { it.qtd = e.target.value; e.target.classList.remove('invalido'); atualizarResumo(); }});
+      const un = el('select', {id:id+'u', onchange: e => { it.un = e.target.value; }},
+        UNIDADES.map(u => { const o = el('option', {value:u, text:u}); if (u === it.un) o.selected = true; return o; }));
+      const obs = el('input', {type:'text', id:id+'o', maxlength:'300', placeholder:'Marca, modelo, medida, onde será usado', value: it.obs,
+        oninput: e => { it.obs = e.target.value; }});
+
+      const topo = el('div', {class:'item-topo'}, [ el('span', {class:'item-n', text:'Item ' + (i+1)}) ]);
+      if (itens.length > 1){
+        topo.appendChild(el('button', {type:'button', class:'remover', text:'Remover', 'aria-label':'Remover item ' + (i+1),
+          onclick: () => { itens.splice(i,1); desenharItens(); }}));
+      }
+      lista.appendChild(el('div', {class:'item'}, [
+        topo,
+        el('div', {class:'campo'}, [ el('label', {for:id+'d', text:'O que precisa'}), desc ]),
+        el('div', {class:'dupla campo'}, [
+          el('div', {}, [ el('label', {for:id+'q', text:'Quantidade'}), qtd ]),
+          el('div', {}, [ el('label', {for:id+'u', text:'Unidade'}), un ])
+        ]),
+        el('div', {class:'campo'}, [ (() => { const l = el('label', {for:id+'o', text:'Detalhes '});
+          l.appendChild(el('span', {class:'opcional', text:'(opcional)'})); return l; })(), obs ])
+      ]));
+    });
+    $('btnAddItem').hidden = itens.length >= MAX_ITENS;
+    atualizarResumo();
+  }
+
+  const numero = v => Number(String(v).replace(',', '.'));
+
+  // ---------- anexos ----------
+  function lerImagem(file){
+    return new Promise((ok, falha) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const k = Math.min(1, 1600 / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        const data = c.toDataURL('image/jpeg', 0.78);
+        ok({ nome: file.name.replace(/\.[^.]+$/, '') + '.jpg', tipo:'image/jpeg', dados: data.split(',')[1], previa: data });
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); falha(new Error('imagem')); };
+      img.src = url;
+    });
+  }
+  function lerPdf(file){
+    return new Promise((ok, falha) => {
+      const r = new FileReader();
+      r.onload = () => ok({ nome: file.name, tipo:'application/pdf', dados: String(r.result).split(',')[1], previa:'' });
+      r.onerror = () => falha(new Error('pdf'));
+      r.readAsDataURL(file);
+    });
+  }
+  async function adicionarArquivos(files){
+    aviso('erroForm','');
+    for (const f of files){
+      if (anexos.length >= MAX_ANEXOS){ aviso('erroForm','Limite de ' + MAX_ANEXOS + ' arquivos por pedido.'); break; }
+      try{
+        if (f.type === 'application/pdf'){
+          if (f.size > MAX_PDF){ aviso('erroForm','O PDF "' + f.name + '" passa de 4 MB. Envie um arquivo menor.'); continue; }
+          anexos.push(await lerPdf(f));
+        } else if (f.type.startsWith('image/')){
+          anexos.push(await lerImagem(f));
+        } else {
+          aviso('erroForm','"' + f.name + '" não é foto nem PDF.');
+        }
+      }catch(e){
+        aviso('erroForm','Não foi possível abrir "' + f.name + '". Tente tirar a foto de novo.');
+      }
+    }
+    desenharAnexos();
+  }
+  function desenharAnexos(){
+    const lista = $('listaAnexos');
+    lista.textContent = '';
+    anexos.forEach((a, i) => {
+      const caixa = el('div', {class:'anexo'});
+      if (a.previa) caixa.appendChild(el('img', {src:a.previa, alt:'Foto ' + (i+1)}));
+      else caixa.appendChild(el('span', {text:'PDF: ' + a.nome}));
+      caixa.appendChild(el('button', {type:'button', text:'×', 'aria-label':'Remover anexo ' + (i+1),
+        onclick: () => { anexos.splice(i,1); desenharAnexos(); }}));
+      lista.appendChild(caixa);
+    });
+    lista.hidden = anexos.length === 0;
+    $('btnAnexo').hidden = anexos.length >= MAX_ANEXOS;
+    atualizarResumo();
+  }
+
+  function atualizarResumo(){
+    const n = itens.filter(i => i.descricao.trim() || i.qtd).length || itens.length;
+    const r = $('resumo');
+    r.textContent = '';
+    r.appendChild(el('b', {text: n + (n === 1 ? ' item' : ' itens')}));
+    if (anexos.length) r.appendChild(document.createTextNode(', ' + anexos.length + (anexos.length === 1 ? ' anexo' : ' anexos')));
+  }
+
+  // ---------- envio ----------
+  function validar(){
+    let primeiro = null;
+    const marcar = campo => { campo.classList.add('invalido'); if (!primeiro) primeiro = campo; };
+    ['solicitante','setor'].forEach(id => { const c = $(id); c.classList.remove('invalido'); if (!c.value.trim()) marcar(c); });
+    itens.forEach((it, i) => {
+      if (!it.descricao.trim()) marcar($('it'+i+'d'));
+      if (!(numero(it.qtd) > 0)) marcar($('it'+i+'q'));
+    });
+    if (primeiro){
+      aviso('erroForm','Preencha os campos marcados em vermelho.');
+      primeiro.focus();
+      return false;
+    }
+    return true;
+  }
+
+  async function enviar(){
+    if (enviando || !validar()) return;
+    enviando = true;
+    const b = $('btnEnviar'); b.disabled = true; b.textContent = 'Enviando…';
+    aviso('erroForm','');
+    guarda.gravar('ch_nome', $('solicitante').value.trim());
+    guarda.gravar('ch_setor', $('setor').value.trim());
+    guarda.gravar('ch_contato', $('contato').value.trim());
+    try{
+      const r = await chamar({
+        acao:'enviar', senha,
+        solicitante: $('solicitante').value, setor: $('setor').value, contato: $('contato').value,
+        urgencia: document.querySelector('input[name=urgencia]:checked').value,
+        prazo: $('prazo').value, justificativa: $('justificativa').value,
+        itens: itens.map(i => ({descricao:i.descricao, qtd:numero(i.qtd), un:i.un, obs:i.obs})),
+        anexos: anexos.map(a => ({nome:a.nome, tipo:a.tipo, dados:a.dados}))
+      });
+      if (r.ok){
+        $('okNum').textContent = 'Nº ' + r.numero;
+        mostrar('telaOk');
+      } else if (r.erro === 'senha'){
+        guarda.apagar('ch_senha'); senha = '';
+        mostrar('telaEntrada');
+        aviso('erroEntrada','A senha mudou. Digite a nova senha e envie o pedido de novo.');
+      } else if (r.erro === 'dados'){
+        aviso('erroForm','Faltam dados no pedido. Confira nome, setor e os itens.');
+      } else {
+        aviso('erroForm','O servidor não conseguiu registrar o pedido. Tente de novo em instantes; nada do que você digitou foi perdido.');
+      }
+    }catch(e){
+      aviso('erroForm','Pedido não enviado: sem conexão. Confira a internet e toque em Enviar pedido de novo; nada do que você digitou foi perdido.');
+    }finally{
+      enviando = false; b.disabled = false; b.textContent = 'Enviar pedido';
+    }
+  }
+
+  // ---------- eventos ----------
+  $('btnEntrar').addEventListener('click', () => entrar($('senha').value.trim()));
+  $('senha').addEventListener('keydown', e => { if (e.key === 'Enter') entrar($('senha').value.trim()); });
+  $('btnSair').addEventListener('click', () => { guarda.apagar('ch_senha'); senha = ''; $('senha').value = ''; mostrar('telaEntrada'); });
+  $('btnAddItem').addEventListener('click', () => {
+    itens.push(novoItem()); desenharItens();
+    const novo = $('it' + (itens.length - 1) + 'd'); if (novo) novo.focus();
+  });
+  $('btnAnexo').addEventListener('click', () => $('arquivo').click());
+  $('arquivo').addEventListener('change', e => { adicionarArquivos(Array.from(e.target.files || [])); e.target.value = ''; });
+  $('btnEnviar').addEventListener('click', enviar);
+  $('btnNovo').addEventListener('click', abrirFormulario);
+  ['solicitante','setor'].forEach(id => $(id).addEventListener('input', e => e.target.classList.remove('invalido')));
+
+  // ---------- início ----------
+  mostrar('telaEntrada');
+  if (!configurado){
+    aviso('erroEntrada','Formulário ainda não configurado: falta colar a URL do Apps Script no arquivo index.html.', true);
+  } else {
+    const salva = guarda.ler('ch_senha');
+    if (salva) entrar(salva, true);
+  }
+})();
+</script>
+</body>
+</html>
